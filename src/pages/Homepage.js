@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./homepage.css";
 import { url } from "../url";
 import axios from "axios";
-import { Button, Input, Modal } from "antd";
+import { Button, Input, Modal, message } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const Homepage = () => {
@@ -11,7 +11,7 @@ const Homepage = () => {
     height: "",
     weight: "",
   };
-  const [personData, setFormData] = useState(personDetails);
+  const [personData, setPersonData] = useState(personDetails);
   const [data, setData] = useState([]);
   const [open, setOpen] = useState(false);
   const [update, setUpdate] = useState("");
@@ -21,7 +21,7 @@ const Homepage = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate('/')
+      navigate("/");
     }
     const fetchData = async () => {
       try {
@@ -42,8 +42,11 @@ const Homepage = () => {
       const submitData = await axios.post(`${url}/products/create`, {
         personData,
       });
-      alert("Successfully Created");
-      setFormData({
+      const data = submitData.data;
+
+      setData((prev) => [...prev, data]);
+      message.success("Successfully Created");
+      setPersonData({
         name: "",
         height: "",
         weight: "",
@@ -56,7 +59,7 @@ const Homepage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setPersonData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleUpdateChange = (e) => {
@@ -80,6 +83,14 @@ const Homepage = () => {
       const response = await axios.put(`${url}/products/update`, {
         update,
       });
+      const datas = await response.data;
+      setData(
+        data.map((record) =>
+          record._id === update._id ? { ...record, ...datas } : record
+        )
+      );
+      console.log(response);
+      message.success("Update Successfully");
       handleClose();
       console.log(response);
     } catch (error) {
@@ -96,52 +107,56 @@ const Homepage = () => {
     setUpdate("");
   };
   return (
-    <div>
-      <h1 style={{ display: "flex", justifyContent: "center" }}> Home Page</h1>
-      <div className="input-container">
-        <Modal
-          title="Basic Modal"
-          open={open}
-          onOk={handleUpdate}
-          onCancel={handleClose}
-        >
-          <form>
-            <div>
-              <label htmlFor="name">Name:</label>
-              <Input
-                type="text"
-                id="name"
-                onChange={handleUpdateChange}
-                name="name"
-                value={update.name}
-              />
-            </div>
-            <div>
-              <label htmlFor="height">Height:</label>
-              <Input
-                type="number"
-                id="height"
-                onChange={handleUpdateChange}
-                name="height"
-                value={update.height}
-              />
-            </div>
-            <div>
-              <label htmlFor="weight">Weight:</label>
-              <Input
-                type="number"
-                id="weight"
-                onChange={handleUpdateChange}
-                name="weight"
-                value={update.weight}
-              />
-            </div>
-          </form>
-        </Modal>
-        <form ref={formRef} onSubmit={handlePost}>
+    <div style={{ backgroundColor: "#cdcbe6", height: "100vh" }}>
+      <h1 style={{ display: "flex", justifyContent: "center" }}>
+        Person Details
+      </h1>
+
+      <Modal
+        title="Basic Modal"
+        open={open}
+        onOk={handleUpdate}
+        onCancel={handleClose}
+      >
+        <form>
+          <div>
+            <label htmlFor="name">Name:</label>
+            <Input
+              type="text"
+              id="name"
+              onChange={handleUpdateChange}
+              name="name"
+              value={update.name}
+            />
+          </div>
+          <div>
+            <label htmlFor="weight">Weight:</label>
+            <Input
+              type="number"
+              id="weight"
+              onChange={handleUpdateChange}
+              name="weight"
+              value={update.weight}
+            />
+          </div>
+          <div>
+            <label htmlFor="height">Height:</label>
+            <Input
+              type="number"
+              id="height"
+              onChange={handleUpdateChange}
+              name="height"
+              value={update.height}
+            />
+          </div>
+        </form>
+      </Modal>
+      <div>
+        <form className="input-container" ref={formRef} onSubmit={handlePost}>
           <div>
             <label htmlFor="name">Name:</label>
             <input
+              required
               type="text"
               id="name"
               onChange={handleChange}
@@ -150,18 +165,9 @@ const Homepage = () => {
             />
           </div>
           <div>
-            <label htmlFor="height">Height:</label>
-            <input
-              type="number"
-              id="height"
-              onChange={handleChange}
-              name="height"
-              value={personData.height}
-            />
-          </div>
-          <div>
             <label htmlFor="weight">Weight:</label>
             <input
+              required
               type="number"
               id="weight"
               onChange={handleChange}
@@ -169,6 +175,18 @@ const Homepage = () => {
               value={personData.weight}
             />
           </div>
+          <div>
+            <label htmlFor="height">Height:</label>
+            <input
+              required
+              type="number"
+              id="height"
+              onChange={handleChange}
+              name="height"
+              value={personData.height}
+            />
+          </div>
+
           <input type="submit" value="Submit" />
         </form>
       </div>
@@ -188,7 +206,7 @@ const Homepage = () => {
               Update
             </Button>
             <Button
-              style={{ backgroundColor: "red" }}
+              style={{ backgroundColor: "red",color:'white' }}
               onClick={() => handleDelete(details._id)}
             >
               Delete

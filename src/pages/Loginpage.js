@@ -16,11 +16,11 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const SendData = await axios.post(`${url}/login`, { formData });
-      const response = await SendData.data
+      const response = await SendData.data;
       if (response.status === "ok") {
         message.success("Successfully Logged In");
         navigate("/homepage");
-        localStorage.setItem('token', response.user)
+        localStorage.setItem("token", response.user);
       } else {
         message.error("Incorrect username or password");
       }
@@ -42,6 +42,7 @@ const LoginPage = () => {
         <form onSubmit={handlepost}>
           <label for="email">Email</label>
           <input
+            required
             type="email"
             name="email"
             id="email"
@@ -50,6 +51,7 @@ const LoginPage = () => {
           />
           <label for="password">Password</label>
           <input
+            required
             type="password"
             name="password"
             id="password"

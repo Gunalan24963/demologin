@@ -35,7 +35,6 @@ router.put("/products/update", async (req, res) => {
       { name, weight, height },
       { new: true }
     );
-    console.log(updatedProduct);
     res.status(200).json(updatedProduct);
   } catch (error) {
     console.log(error);
