@@ -123,7 +123,6 @@ const Homepage = () => {
             <label htmlFor="name">Name:</label>
             <Input
               type="text"
-              datatype="ksks"
               id="name"
               onChange={handleUpdateChange}
               name="name"
