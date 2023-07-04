@@ -1,9 +1,11 @@
 const express = require("express");
 const { Product } = require("../models/products");
+const { authenticateToken } = require("../middleware");
 const router = express.Router();
 
-router.post("/products/create", async (req, res) => {
-  const { name, weight, height } = req.body.personData;
+router.post("/products/create", authenticateToken, async (req, res) => {
+  console.log(req.body);
+  const { name, weight, height } = req.body;
 
   try {
     const newProduct = new Product({ name, weight, height });
@@ -15,19 +17,20 @@ router.post("/products/create", async (req, res) => {
   }
 });
 
-router.get("/products/get", async (req, res) => {
+router.get("/products/get", authenticateToken, async (req, res) => {
   try {
     const product = await Product.find({});
     res.status(200).json(product);
   } catch (error) {
+    console.log("error");
     console.log(error);
     res.status(500).json(error);
   }
 });
 
-router.put("/products/update", async (req, res) => {
-  console.log(req.body);
-  const { name, weight, height,_id } = req.body.update;
+router.put("/products/update", authenticateToken, async (req, res) => {
+
+  const { name, weight, height, _id } = req.body;
 
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -42,7 +45,7 @@ router.put("/products/update", async (req, res) => {
   }
 });
 
-router.delete("/products/delete/:id", async (req, res) => {
+router.delete("/products/delete/:id", authenticateToken, async (req, res) => {
   try {
     const deletedProduct = await Product.findByIdAndDelete(req.params.id);
     res.status(200).json(deletedProduct);

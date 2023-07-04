@@ -4,6 +4,7 @@ import { url } from "../url";
 import axios from "axios";
 import { Button, Input, Modal, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { Apirequest } from "../authorize";
 
 const Homepage = () => {
   let personDetails = {
@@ -23,10 +24,13 @@ const Homepage = () => {
     if (!token) {
       navigate("/");
     }
+
+    console.log("called");
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${url}/products/get`);
-        setData(response.data);
+        const response = await Apirequest("GET", "products/get", null ,navigate);
+        setData(response);
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -39,10 +43,9 @@ const Homepage = () => {
     e.preventDefault();
     console.log(personData);
     try {
-      const submitData = await axios.post(`${url}/products/create`, {
-        personData,
-      });
-      const data = submitData.data;
+      const response = await Apirequest("POST", "products/create", personData);
+
+      const data = response;
 
       setData((prev) => [...prev, data]);
       message.success("Successfully Created");
@@ -52,6 +55,7 @@ const Homepage = () => {
         weight: "",
       });
     } catch (error) {
+      
       console.log(error);
     }
   };
@@ -70,7 +74,12 @@ const Homepage = () => {
 
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`${url}/products/delete/${id}`);
+      const response = await Apirequest(
+        "DELETE",
+        `products/delete/${id}`,
+        null
+      );
+
       console.log(response);
       setData(data.filter((item) => item._id !== id));
     } catch (error) {
@@ -80,10 +89,9 @@ const Homepage = () => {
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.put(`${url}/products/update`, {
-        update,
-      });
-      const datas = await response.data;
+      const response = await Apirequest("PUT", "products/update", update);
+      const datas = await response;
+
       setData(
         data.map((record) =>
           record._id === update._id ? { ...record, ...datas } : record
@@ -207,7 +215,7 @@ const Homepage = () => {
               Update
             </Button>
             <Button
-              style={{ backgroundColor: "red",color:'white' }}
+              style={{ backgroundColor: "red", color: "white" }}
               onClick={() => handleDelete(details._id)}
             >
               Delete

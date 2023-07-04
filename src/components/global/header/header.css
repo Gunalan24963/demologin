@@ -1,0 +1,14 @@
+.flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-flex{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ee0101;
+    width: auto;
+    flex: 1;
+}
