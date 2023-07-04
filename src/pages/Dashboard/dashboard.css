@@ -1,0 +1,57 @@
+.card-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.card-grid{
+    padding: 30px;
+    background-color: rgb(255, 255, 255);
+}
+.ant-card-head-title {
+  border-bottom: none;
+}
+.icon--up{
+    color: green;
+}
+.icon--down{
+    color:red;
+}
+.icon--badge h1 {
+  color: #020202;
+  font-weight: bold;
+  font-size:larger;
+}
+
+.icon--badge h6{
+    color: #6f6d6d;
+    font-size: 10px;
+}
+
+.table-container {
+    overflow-x: auto;
+  }
+  
+  .custom-table {
+    width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .table-container {
+      overflow-x: scroll;
+    }
+  }
+  
+.custom-table .ant-table-thead > tr > th {
+    background-color: #e6f2ff; /* Change this to the desired header color */
+    color: #1f1c1c; /* Change this to the desired text color */
+  }
+  .custom-table .ant-table-row:hover,
+.custom-table .ant-table-row-selected {
+  background-color: inherit !important;
+}
+
+.custom-table .ant-table-row:hover > td,
+.custom-table .ant-table-row-selected > td {
+  background-color: inherit !important;
+}

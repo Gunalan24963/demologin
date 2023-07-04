@@ -5,7 +5,8 @@ if (cluster.isMaster) {
   console.log(`Master ${process.pid} is running`);
   for (let i = 0; i < num; i++) {
     cluster.fork();
-    
+    console.log(`fork number ${i} is running..`);
+
   }
 } else {
   const server = http.createServer((req, res) => {

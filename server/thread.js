@@ -9,6 +9,7 @@ app.get("/normal", (req, res) => {
 
 app.get("/heavy", (req, res) => {
   const worker = new Worker("./worker.js");
+  worker.postMessage('Start the task!');
   worker.on("message", (data) => {
     console.log(data);
     res.writeHead(200);
